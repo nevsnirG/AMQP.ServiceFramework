@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,9 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="AMQP.Plugin">
-      <HintPath>..\AMQP.Plugin\src\AMQP.Plugin\bin\Release\netstandard2.1\AMQP.Plugin.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\AMQP.Plugin\src\AMQP.Plugin\AMQP.Plugin.csproj" />
   </ItemGroup>
 
 </Project>
