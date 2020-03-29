@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AMQP.Plugin\src\AMQP.Plugin\AMQP.Plugin.csproj" />
+    <ProjectReference Include="$(SolutionDir)\AMQP.Plugin\src\AMQP.Plugin\AMQP.Plugin.csproj" />
   </ItemGroup>
 
 </Project>
