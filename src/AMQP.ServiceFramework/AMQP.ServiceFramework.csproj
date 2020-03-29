@@ -4,4 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="AMQP.Plugin">
+      <HintPath>..\AMQP.Plugin\src\AMQP.Plugin\bin\Release\netstandard2.1\AMQP.Plugin.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,3 @@
+[submodule "src/AMQP.Plugin"]
+	path = src/AMQP.Plugin
+	url = https://github.com/nevsnirG/AMQP.Plugin
