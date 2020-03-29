@@ -7,10 +7,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.3" />
+    <PackageReference Include="nevsnirG.AMQP.Plugin" Version="1.0.0" Condition="!Exists('$(SolutionDir)\AMQP.Plugin\src\AMQP.Plugin\AMQP.Plugin.csproj')"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\AMQP.Plugin\src\AMQP.Plugin\AMQP.Plugin.csproj" />
+    <ProjectReference Condition="Exists('$(SolutionDir)\AMQP.Plugin\src\AMQP.Plugin\AMQP.Plugin.csproj')" Include="$(SolutionDir)\AMQP.Plugin\src\AMQP.Plugin\AMQP.Plugin.csproj" />
   </ItemGroup>
 
 </Project>
