@@ -2,7 +2,7 @@
 
 namespace AMQP.ServiceFramework.Activation
 {
-    public class CommandHandlerContext
+    internal sealed class CommandHandlerContext : ICommandHandlerContext
     {
         public Type CommandHandlerType { get; internal set; }
     }

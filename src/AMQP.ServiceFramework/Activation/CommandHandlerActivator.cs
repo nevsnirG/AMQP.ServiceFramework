@@ -12,12 +12,12 @@ namespace AMQP.ServiceFramework.Activation
             _serviceProvider = serviceProvider;
         }
 
-        public object Create(CommandHandlerContext context)
+        public object Create(ICommandHandlerContext context)
         {
             return ActivatorUtilities.CreateInstance(_serviceProvider, context.CommandHandlerType);
         }
 
-        public void Release(CommandHandlerContext context, object commandHandler)
+        public void Release(ICommandHandlerContext context, object commandHandler)
         {
         }
     }

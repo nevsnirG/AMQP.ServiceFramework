@@ -2,8 +2,8 @@
 {
     public interface ICommandHandlerActivator
     {
-        object Create(CommandHandlerContext context);
+        object Create(ICommandHandlerContext context);
 
-        void Release(CommandHandlerContext context, object commandHandler);
+        void Release(ICommandHandlerContext context, object commandHandler);
     }
 }
