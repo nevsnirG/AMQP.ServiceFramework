@@ -17,21 +17,25 @@ namespace AMQP.ServiceFramework.Factories
             if (parameters.Length == 0 || parameters.Length > 1)
                 throw new ArgumentException("The specified method can only have 1 parameter.", nameof(methodInfo));
 
+            var parameter = parameters[0];
             var declaringType = methodInfo.DeclaringType;
-            var topicClientAttribute = declaringType.GetCustomAttribute<TopicClientAttribute>(false);
-            if (topicClientAttribute is null)
-                throw new ArgumentException($"The declaring type of the specified method is not attributed with the {nameof(TopicClientAttribute)}.", nameof(methodInfo));
+            var topicClientAttributes = declaringType.GetCustomAttributes(typeof(TopicSubscriptionAttribute), false);
+            if(topicClientAttributes.Length == 0)
+                throw new ArgumentException($"The specified method's declaring type is not attributed with the {nameof(TopicClientAttribute)}.", nameof(methodInfo));
 
-            var topicSubscriptionAttribute = methodInfo.GetCustomAttribute<TopicSubscriptionAttribute>(false);
-            if (topicSubscriptionAttribute is null)
+            var topicClientAttribute = topicClientAttributes[0] as TopicClientAttribute;
+            var topicSubscriptionAttributes = methodInfo.GetCustomAttributes(typeof(TopicSubscriptionAttribute), false);
+            if (topicSubscriptionAttributes.Length == 0)
                 throw new ArgumentException($"The specified method is not attributed with the {nameof(TopicSubscriptionAttribute)}.", nameof(methodInfo));
 
+            var topicSubscriptionAttribute = topicSubscriptionAttributes[0] as TopicSubscriptionAttribute;
             return new CommandHandlerContext()
             {
                 DeclaringType = declaringType,
                 Queue = topicClientAttribute.Queue ?? string.Empty,
                 TargetMethod = methodInfo,
-                Topic = topicSubscriptionAttribute.Topic
+                Topic = topicSubscriptionAttribute.Topic,
+                ParameterType = parameter.ParameterType
             };
         }
     }
