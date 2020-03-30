@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moq.Protected;
 using Xunit;
@@ -20,6 +21,7 @@ namespace AMQP.ServiceFramework.Tests
             _serviceBuilderMock.Protected()
                 .Setup("Setup", ItExpr.IsAny<IServiceBuilderContext>())
                 .Verifiable("This method should only have been called once.");
+            _serviceBuilderMock.Protected();
             IServiceBuilder serviceBuilder = _serviceBuilderMock.Object;
 
             //Act

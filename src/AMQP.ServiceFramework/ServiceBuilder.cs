@@ -1,4 +1,5 @@
 ﻿using AMQP.ServiceFramework.Activation;
+using AMQP.ServiceFramework.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -28,7 +29,8 @@ namespace AMQP.ServiceFramework
                 {
                     if (!_initialized)
                     {
-                        var serviceBuilderContext = new ServiceBuilderContext();
+                        var services = new ServiceCollection();
+                        var serviceBuilderContext = new ServiceBuilderContext(services);
                         Setup(serviceBuilderContext);
 
                         _initialized = true;
@@ -44,6 +46,7 @@ namespace AMQP.ServiceFramework
         /// <param name="context">The <see cref="IServiceBuilderContext"/> instance.</param>
         protected virtual void Setup(IServiceBuilderContext context)
         {
+            context.Services.TryAddTransient<ICommandHandlerContextFactory, CommandHandlerContextFactory>();
             context.Services.TryAddTransient<ICommandHandlerActivator, CommandHandlerActivator>();
 
             //We will build a new service provider in which the user can register services. This service provider will be accessible in the CommandHandlerActivator.
@@ -51,6 +54,9 @@ namespace AMQP.ServiceFramework
             context.Services.TryAddSingleton(commandHandlerServiceProvider);
 
             _serviceProvider = context.Services.BuildServiceProvider();
+
+            //set dependencies
+            
         }
 
         /// <summary>

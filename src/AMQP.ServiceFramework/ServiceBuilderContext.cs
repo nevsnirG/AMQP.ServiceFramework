@@ -6,9 +6,9 @@ namespace AMQP.ServiceFramework
     {
         public IServiceCollection Services { get; }
 
-        public ServiceBuilderContext()
+        public ServiceBuilderContext(IServiceCollection services)
         {
-            Services = new ServiceCollection();
+            Services = services;
         }
     }
 }

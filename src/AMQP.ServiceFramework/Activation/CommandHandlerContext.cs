@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Reflection;
 
 namespace AMQP.ServiceFramework.Activation
 {
     internal sealed class CommandHandlerContext : ICommandHandlerContext
     {
-        public Type CommandHandlerType { get; internal set; }
+        public string Queue { get; internal set; }
+        public string Topic { get; internal set; }
+        public MethodInfo TargetMethod { get; internal set; }
+        public Type DeclaringType { get; internal set; }
+        public Type ParameterType { get; internal set; }
     }
 }

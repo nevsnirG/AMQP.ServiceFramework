@@ -2,6 +2,7 @@
 
 namespace AMQP.ServiceFramework.Attributes
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public sealed class TopicSubscriptionAttribute : Attribute
     {
         public string Topic { get; }
