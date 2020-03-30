@@ -5,13 +5,13 @@ using System;
 
 namespace AMQP.ServiceFramework
 {
-    public abstract class ServiceBuilder
+    public abstract class ServiceBuilder : IServiceBuilder
     {
         private readonly object _lock;
 
         private IServiceProvider _serviceProvider;
         private bool _initialized;
-        
+
         protected ServiceBuilder()
         {
             _lock = new object();
