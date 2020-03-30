@@ -1,13 +1,14 @@
-﻿using AMQP.ServiceFramework.Attributes;
-using AMQP.ServiceFramework.Factories;
+﻿using AMQP.ServiceFramework.Factories;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using Xunit;
 
 namespace AMQP.ServiceFramework.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class CommandHandlerContextFactoryTests
     {
         private readonly Mock<MethodInfo> _methodInfoMock;
