@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moq.Protected;
 using Xunit;
