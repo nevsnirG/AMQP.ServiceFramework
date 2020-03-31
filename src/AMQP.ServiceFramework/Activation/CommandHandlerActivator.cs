@@ -19,7 +19,8 @@ namespace AMQP.ServiceFramework.Activation
 
         public void Release(ICommandHandlerContext context, object commandHandler)
         {
-            //TODO - Implement Release method.
+            if (!(commandHandler is null) && commandHandler is IDisposable disposable)
+                disposable.Dispose();
         }
     }
 }

@@ -4,8 +4,8 @@ using System.Reflection;
 
 namespace AMQP.ServiceFramework.Resolvers
 {
-    public interface IClassResolver
+    public interface ITypeResolver
     {
-        IEnumerable<Type> MapAssembly(Assembly assembly);
+        IEnumerable<Type> ResolveTypes(Assembly assembly);
     }
 }

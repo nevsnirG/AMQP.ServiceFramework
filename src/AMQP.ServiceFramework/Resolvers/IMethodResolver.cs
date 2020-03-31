@@ -6,6 +6,6 @@ namespace AMQP.ServiceFramework.Resolvers
 {
     public interface IMethodResolver
     {
-        IEnumerable<MethodInfo> MapClass(Type type);
+        IEnumerable<MethodInfo> ResolveMethods(Type types);
     }
 }

@@ -1,14 +1,32 @@
-﻿using System;
+﻿using AMQP.ServiceFramework.Attributes;
+using AMQP.ServiceFramework.Factories;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace AMQP.ServiceFramework.Resolvers
 {
-    internal sealed class TopicClientTypeResolver : IClassResolver
+    internal sealed class TopicClientTypeResolver : ITypeResolver
     {
-        public IEnumerable<Type> MapAssembly(Assembly assembly)
+        private readonly IAttributeResolverFactory<Type, TopicClientAttribute> _attributeResolverFactory;
+
+        public TopicClientTypeResolver(IAttributeResolverFactory<Type, TopicClientAttribute> attributeResolverFactory)
         {
-            throw new NotImplementedException();
+            _attributeResolverFactory = attributeResolverFactory ?? throw new ArgumentNullException(nameof(attributeResolverFactory));
+        }
+
+        public IEnumerable<Type> ResolveTypes(Assembly assembly)
+        {
+            var resolver = _attributeResolverFactory.CreateAttributeResolver();
+
+            foreach (var type in assembly.GetTypes())
+            {
+                var attribute = resolver.Invoke(type);
+                if (!(attribute is null))
+                {
+                    yield return type;
+                }
+            }
         }
     }
 }
