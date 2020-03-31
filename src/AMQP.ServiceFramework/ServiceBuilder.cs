@@ -43,11 +43,10 @@ namespace AMQP.ServiceFramework
         private void Initialize()
         {
             var services = new ServiceCollection();
-            var config = new Configuration(services);
-            Configure(config);
+            Configure(new Configuration(services));
 
             //TODO - Improve using MediatR.
-            var serviceProvider = config.Services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProvider();
             var assemblyResolver = serviceProvider.GetRequiredService<IAssemblyResolver>();
             var typeResolver = serviceProvider.GetRequiredService<ITypeResolver>();
             var methodResolver = serviceProvider.GetRequiredService<IMethodResolver>();
