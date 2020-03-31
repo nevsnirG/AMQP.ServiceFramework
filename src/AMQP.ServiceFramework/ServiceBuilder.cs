@@ -18,6 +18,7 @@ namespace AMQP.ServiceFramework
             _lock = new object();
         }
 
+        #region Initialization
         /// <summary>
         /// Ensure the class has been initialized.
         /// </summary>
@@ -77,5 +78,6 @@ namespace AMQP.ServiceFramework
         protected virtual void RegisterDependencies(IServiceCollection services)
         {
         }
+        #endregion
     }
 }

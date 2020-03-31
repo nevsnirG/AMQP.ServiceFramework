@@ -164,8 +164,11 @@ namespace AMQP.ServiceFramework.Tests
                 });
             Expression<Func<Type, object[]>> getDeclaringTypeCustomAttributesMock = (type) => type.GetCustomAttributes(It.IsAny<Type>(), It.IsAny<bool>());
             _declaringTypeMock.Setup(getDeclaringTypeCustomAttributesMock)
-                .Returns(() =>
+                .Returns((Type type, bool b) =>
                 {
+                    if (b)
+                        Assert.True(false, "The parameter should be false.");
+
                     return new object[1]
                     {
                         new TopicClientAttribute(queue)
@@ -173,8 +176,11 @@ namespace AMQP.ServiceFramework.Tests
                 });
             Expression<Func<MethodInfo, object[]>> getMethodInfoCustomAttributesMock = (method) => method.GetCustomAttributes(It.IsAny<Type>(), It.IsAny<bool>());
             _methodInfoMock.Setup(getMethodInfoCustomAttributesMock)
-                .Returns(() =>
+                .Returns((Type type, bool b) =>
                 {
+                    if (b)
+                        Assert.True(false, "The parameter should be false.");
+
                     return new object[1]
                     {
                         new TopicSubscriptionAttribute(topic)
