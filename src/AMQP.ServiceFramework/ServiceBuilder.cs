@@ -1,8 +1,10 @@
 ﻿using AMQP.ServiceFramework.Activation;
 using AMQP.ServiceFramework.Factories;
+using AMQP.ServiceFramework.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.Reflection;
 
 namespace AMQP.ServiceFramework
 {
@@ -10,7 +12,6 @@ namespace AMQP.ServiceFramework
     {
         private readonly object _lock;
 
-        private IServiceProvider _serviceProvider;
         private bool _initialized;
 
         protected ServiceBuilder()
@@ -18,7 +19,6 @@ namespace AMQP.ServiceFramework
             _lock = new object();
         }
 
-        #region Initialization
         /// <summary>
         /// Ensure the class has been initialized.
         /// </summary>
@@ -31,7 +31,7 @@ namespace AMQP.ServiceFramework
                     if (!_initialized)
                     {
                         var services = new ServiceCollection();
-                        var serviceBuilderContext = new ServiceBuilderContext(services);
+                        var serviceBuilderContext = new Configuration(services);
                         Setup(serviceBuilderContext);
 
                         _initialized = true;
@@ -44,20 +44,21 @@ namespace AMQP.ServiceFramework
         /// <br>Set up the service builder and its required dependencies.</br>
         /// <br>Make sure to invoke the base method when overriding.</br>
         /// </summary>
-        /// <param name="context">The <see cref="IServiceBuilderContext"/> instance.</param>
-        protected virtual void Setup(IServiceBuilderContext context)
+        /// <param name="config">The <see cref="IConfiguration"/> instance.</param>
+        protected virtual void Setup(IConfiguration config)
         {
-            context.Services.TryAddTransient<ICommandHandlerContextFactory, CommandHandlerContextFactory>();
-            context.Services.TryAddTransient<ICommandHandlerActivator, CommandHandlerActivator>();
+            config.Services.TryAddTransient<ICommandHandlerContextFactory, CommandHandlerContextFactory>();
+            config.Services.TryAddTransient<ICommandHandlerActivator, CommandHandlerActivator>();
+            config.Services.TryAddTransient<IClassResolver, TopicClientTypeResolver>();
+            config.Services.TryAddTransient<IMethodResolver, TopicSubscriptionMethodResolver>();
+            config.Services.TryAddTransient<IAssemblyResolver, AssemblyResolver>();
 
             //We will build a new service provider in which the user can register services. This service provider will be accessible in the CommandHandlerActivator.
             var commandHandlerServiceProvider = GetUserServiceProvider();
-            context.Services.TryAddSingleton(commandHandlerServiceProvider);
+            config.Services.TryAddSingleton(commandHandlerServiceProvider);
 
-            _serviceProvider = context.Services.BuildServiceProvider();
-
-            //set dependencies
-            
+            var serviceProvider = config.Services.BuildServiceProvider();
+            Initialize(serviceProvider);            
         }
 
         /// <summary>
@@ -78,6 +79,22 @@ namespace AMQP.ServiceFramework
         protected virtual void RegisterDependencies(IServiceCollection services)
         {
         }
-        #endregion
+
+        private void Initialize(IServiceProvider serviceProvider)
+        {
+            var assemblyResolver = serviceProvider.GetRequiredService<IAssemblyResolver>();
+            var typeResolver = serviceProvider.GetRequiredService<IClassResolver>();
+            var methodResolver = serviceProvider.GetRequiredService<IMethodResolver>();
+            var commandHandlerContextFactory = serviceProvider.GetRequiredService<ICommandHandlerContextFactory>();
+
+            var assembly = assemblyResolver.Resolve();
+            var types = typeResolver.MapAssembly(assembly);
+
+            foreach (var type in types)
+            {
+                var methods = methodResolver.MapClass(type);
+
+            }
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace AMQP.ServiceFramework.Tests
         {
             //Arrange
             _serviceBuilderMock.Protected()
-                .Setup("Setup", ItExpr.IsAny<IServiceBuilderContext>())
+                .Setup("Setup", ItExpr.IsAny<IConfiguration>())
                 .Verifiable("This method should only have been called once.");
             _serviceBuilderMock.Protected();
             IServiceBuilder serviceBuilder = _serviceBuilderMock.Object;
@@ -29,7 +29,7 @@ namespace AMQP.ServiceFramework.Tests
 
             //Assert
             _serviceBuilderMock.Protected()
-                .Verify("Setup", Times.Once(), ItExpr.IsAny<IServiceBuilderContext>());
+                .Verify("Setup", Times.Once(), ItExpr.IsAny<IConfiguration>());
         }
     }
 }
