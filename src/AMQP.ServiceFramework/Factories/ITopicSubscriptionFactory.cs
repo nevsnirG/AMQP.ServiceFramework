@@ -1,4 +1,5 @@
 ﻿using AMQP.ServiceFramework.Activation;
+using AMQP.ServiceFramework.Registries;
 
 namespace AMQP.ServiceFramework.Factories
 {

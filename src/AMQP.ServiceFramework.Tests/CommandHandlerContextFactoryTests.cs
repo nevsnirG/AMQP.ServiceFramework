@@ -1,5 +1,6 @@
 ﻿using AMQP.ServiceFramework.Attributes;
 using AMQP.ServiceFramework.Factories;
+using AMQP.ServiceFramework.Registries;
 using Moq;
 using System;
 using System.Diagnostics.CodeAnalysis;

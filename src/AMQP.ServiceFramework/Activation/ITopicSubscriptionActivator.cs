@@ -1,4 +1,6 @@
-﻿namespace AMQP.ServiceFramework.Activation
+﻿using AMQP.ServiceFramework.Registries;
+
+namespace AMQP.ServiceFramework.Activation
 {
     public interface ITopicSubscriptionActivator
     {

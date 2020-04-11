@@ -1,3 +1,4 @@
+using AMQP.Plugin.Abstractions;
 using Moq;
 using Moq.Protected;
 using System.Diagnostics.CodeAnalysis;
@@ -8,11 +9,13 @@ namespace AMQP.ServiceFramework.Tests
     [ExcludeFromCodeCoverage]
     public class ServiceBuilderTests
     {
+        private readonly Mock<IConnection> _connectionMock;
         private readonly Mock<ServiceBuilder> _serviceBuilderMock;
 
         public ServiceBuilderTests()
         {
-            _serviceBuilderMock = new Mock<ServiceBuilder>(MockBehavior.Strict);
+            _connectionMock = new Mock<IConnection>(MockBehavior.Strict);
+            _serviceBuilderMock = new Mock<ServiceBuilder>(MockBehavior.Strict, _connectionMock.Object);
         }
 
         [Fact]
