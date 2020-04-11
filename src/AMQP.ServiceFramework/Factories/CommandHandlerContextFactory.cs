@@ -35,7 +35,8 @@ namespace AMQP.ServiceFramework.Factories
                 Queue = topicClientAttribute.Queue ?? string.Empty,
                 TargetMethod = methodInfo,
                 Topic = topicSubscriptionAttribute.Topic,
-                ParameterType = parameter.ParameterType
+                ParameterType = parameter.ParameterType,
+                ParserType = topicSubscriptionAttribute.ParserType
             };
         }
     }

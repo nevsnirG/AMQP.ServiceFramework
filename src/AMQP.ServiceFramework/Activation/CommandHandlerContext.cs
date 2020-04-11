@@ -10,5 +10,6 @@ namespace AMQP.ServiceFramework.Activation
         public MethodInfo TargetMethod { get; internal set; }
         public Type DeclaringType { get; internal set; }
         public Type ParameterType { get; internal set; }
+        public Type ParserType { get; internal set; }
     }
 }

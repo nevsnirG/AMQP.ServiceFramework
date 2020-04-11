@@ -1,8 +1,9 @@
 ﻿using AMQP.ServiceFramework.Activation;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
-namespace AMQP.ServiceFramework
+namespace AMQP.ServiceFramework.Registries
 {
     internal sealed class CommandHandlerRegistry : ICommandHandlerRegistry
     {
@@ -22,6 +23,16 @@ namespace AMQP.ServiceFramework
 
             var instance = _commandHandlerActivator.Create(commandHandlerContext);
             _commandHandlers.Add(commandHandlerContext, instance);
+        }
+
+        public IEnumerator<KeyValuePair<ICommandHandlerContext, object>> GetEnumerator()
+        {
+            return _commandHandlers.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _commandHandlers.GetEnumerator();
         }
 
         #region IDisposable Support

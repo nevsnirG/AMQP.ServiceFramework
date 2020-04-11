@@ -10,4 +10,8 @@
     <PackageReference Include="nevsnirG.AMQP.Plugin" Version="1.0.0" Condition="!Exists('$(SolutionDir)\AMQP.Plugin.Abstractions\src\AMQP.Plugin.Abstractions\AMQP.Plugin.Abstractions.csproj')" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AMQP.Plugin.Abstractions\src\AMQP.Plugin.Abstractions\AMQP.Plugin.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>
