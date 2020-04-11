@@ -1,9 +1,8 @@
 ﻿using AMQP.Plugin.Abstractions;
 using AMQP.ServiceFramework.Activation;
-using AMQP.ServiceFramework.Registries;
 using System;
 
-namespace AMQP.ServiceFramework
+namespace AMQP.ServiceFramework.Registries
 {
     internal sealed class TopicSubscription : ITopicSubscription
     {

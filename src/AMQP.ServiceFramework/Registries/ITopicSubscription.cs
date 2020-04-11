@@ -1,8 +1,7 @@
 ﻿using AMQP.Plugin.Abstractions;
-using AMQP.ServiceFramework.Registries;
 using System;
 
-namespace AMQP.ServiceFramework
+namespace AMQP.ServiceFramework.Registries
 {
     public interface ITopicSubscription : IDisposable
     {

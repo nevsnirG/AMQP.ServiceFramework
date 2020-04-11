@@ -1,4 +1,4 @@
-﻿namespace AMQP.ServiceFramework
+﻿namespace AMQP.ServiceFramework.Registries
 {
     public abstract class MessageParser
     {
