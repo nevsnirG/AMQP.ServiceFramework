@@ -1,4 +1,5 @@
 ﻿using AMQP.ServiceFramework.Activation;
+using AMQP.ServiceFramework.Registries;
 using System.Collections.Generic;
 
 namespace AMQP.ServiceFramework.Extensions

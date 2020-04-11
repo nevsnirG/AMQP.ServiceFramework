@@ -1,7 +1,9 @@
-﻿using AMQP.ServiceFramework.Activation;
+﻿using AMQP.Plugin.Abstractions;
+using AMQP.ServiceFramework.Activation;
 using AMQP.ServiceFramework.Attributes;
 using AMQP.ServiceFramework.Extensions;
 using AMQP.ServiceFramework.Factories;
+using AMQP.ServiceFramework.Registries;
 using AMQP.ServiceFramework.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -13,13 +15,15 @@ namespace AMQP.ServiceFramework
     public abstract class ServiceBuilder : IServiceBuilder, IDisposable
     {
         private readonly object _lock;
+        private readonly IConnection _connection;
 
         private ICommandHandlerRegistry _commandHandlerRegistry;
         private bool _initialized;
 
-        protected ServiceBuilder()
+        protected ServiceBuilder(IConnection connection)
         {
             _lock = new object();
+            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         }
 
         /// <summary>
@@ -41,9 +45,19 @@ namespace AMQP.ServiceFramework
             }
         }
 
+        /// <summary>
+        /// Set up the service builder and register dependencies.
+        /// </summary>
+        /// <param name="config">The <see cref="IConfiguration"/> instance.</param>
+        protected virtual void Setup(IConfiguration config)
+        {
+        }
+
         private void Initialize()
         {
             var services = new ServiceCollection();
+            services.TryAddSingleton(_connection);
+
             Configure(new Configuration(services));
 
             var serviceProvider = services.BuildServiceProvider();
@@ -67,12 +81,25 @@ namespace AMQP.ServiceFramework
             //add all CommandHandlerContexts to the registry.
             _commandHandlerRegistry = serviceProvider.GetRequiredService<ICommandHandlerRegistry>();
             _commandHandlerRegistry.AddRange(commandHandlerContexts);
+
+            //instantiate all topic subscriptions.
+            var topicSubscriptionFactory = serviceProvider.GetRequiredService<ITopicSubscriptionFactory>();
+            var topicSubscriptionRegistry = serviceProvider.GetRequiredService<ITopicSubscriptionRegistry>();
+            foreach (var keyPair in _commandHandlerRegistry)
+            {
+                var topicSubscription = topicSubscriptionFactory.CreateSubscription(keyPair.Key, keyPair.Value);
+                topicSubscriptionRegistry.Add(topicSubscription);
+            }
         }
 
         private void Configure(IConfiguration configuration)
         {
             Setup(configuration);
 
+            configuration.Services.TryAddTransient<ITopicSubscriptionRegistry, TopicSubscriptionRegistry>();
+            configuration.Services.TryAddTransient<ITopicSubscriptionFactory, TopicSubscriptionFactory>();
+            configuration.Services.TryAddTransient<ITopicSubscriptionActivator, TopicSubscriptionActivator>();
+            configuration.Services.TryAddTransient<IMessageParserRegistry, MessageParserRegistry>();
             configuration.Services.TryAddTransient<ICommandHandlerRegistry, CommandHandlerRegistry>();
             configuration.Services.TryAddTransient<ICommandHandlerContextFactory, CommandHandlerContextFactory>();
             configuration.Services.TryAddTransient<ICommandHandlerActivator, CommandHandlerActivator>();
@@ -81,14 +108,6 @@ namespace AMQP.ServiceFramework
             configuration.Services.TryAddTransient<IAssemblyResolver, AssemblyResolver>();
             configuration.Services.TryAddTransient<IAttributeResolverFactory<Type, TopicClientAttribute>, TypeAttributeResolverFactory>();
             configuration.Services.TryAddTransient<IAttributeResolverFactory<MethodInfo, TopicSubscriptionAttribute>, MethodInfoAttributeResolverFactory>();
-        }
-
-        /// <summary>
-        /// Set up the service builder and register dependencies.
-        /// </summary>
-        /// <param name="config">The <see cref="IConfiguration"/> instance.</param>
-        protected virtual void Setup(IConfiguration config)
-        {
         }
 
         #region IDisposable Support
@@ -106,6 +125,7 @@ namespace AMQP.ServiceFramework
                 _disposedValue = true;
             }
         }
+
         public void Dispose()
         {
             Dispose(true);

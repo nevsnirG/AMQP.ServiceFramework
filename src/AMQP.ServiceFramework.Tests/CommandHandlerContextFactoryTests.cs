@@ -183,7 +183,7 @@ namespace AMQP.ServiceFramework.Tests
 
                     return new object[1]
                     {
-                        new TopicSubscriptionAttribute(topic)
+                        new TopicSubscriptionAttribute(topic, typeof(MessageParser))
                     };
                 });
             var commandHandlerContextFactory = new CommandHandlerContextFactory();
