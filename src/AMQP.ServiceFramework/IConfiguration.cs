@@ -2,7 +2,7 @@
 
 namespace AMQP.ServiceFramework
 {
-    public interface IServiceBuilderContext
+    public interface IConfiguration
     {
         IServiceCollection Services { get; }
     }

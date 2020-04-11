@@ -12,14 +12,18 @@ namespace AMQP.ServiceFramework.Activation
             _serviceProvider = serviceProvider;
         }
 
-        public object Create(ICommandHandlerContext context)
+        public object Create(ICommandHandlerContext commandHandlerContext)
         {
-            return ActivatorUtilities.CreateInstance(_serviceProvider, context.DeclaringType);
+            if (commandHandlerContext is null)
+                throw new ArgumentNullException(nameof(commandHandlerContext));
+
+            return ActivatorUtilities.CreateInstance(_serviceProvider, commandHandlerContext.DeclaringType);
         }
 
         public void Release(ICommandHandlerContext context, object commandHandler)
         {
-            //TODO - Implement Release method.
+            if (!(commandHandler is null) && commandHandler is IDisposable disposable)
+                disposable.Dispose();
         }
     }
 }

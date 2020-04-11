@@ -1,16 +1,20 @@
 ﻿using AMQP.ServiceFramework.Activation;
+using AMQP.ServiceFramework.Attributes;
+using AMQP.ServiceFramework.Extensions;
 using AMQP.ServiceFramework.Factories;
+using AMQP.ServiceFramework.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.Reflection;
 
 namespace AMQP.ServiceFramework
 {
-    public abstract class ServiceBuilder : IServiceBuilder
+    public abstract class ServiceBuilder : IServiceBuilder, IDisposable
     {
         private readonly object _lock;
 
-        private IServiceProvider _serviceProvider;
+        private ICommandHandlerRegistry _commandHandlerRegistry;
         private bool _initialized;
 
         protected ServiceBuilder()
@@ -29,9 +33,7 @@ namespace AMQP.ServiceFramework
                 {
                     if (!_initialized)
                     {
-                        var services = new ServiceCollection();
-                        var serviceBuilderContext = new ServiceBuilderContext(services);
-                        Setup(serviceBuilderContext);
+                        Initialize();
 
                         _initialized = true;
                     }
@@ -39,43 +41,75 @@ namespace AMQP.ServiceFramework
             }
         }
 
-        /// <summary>
-        /// <br>Set up the service builder and its required dependencies.</br>
-        /// <br>Make sure to invoke the base method when overriding.</br>
-        /// </summary>
-        /// <param name="context">The <see cref="IServiceBuilderContext"/> instance.</param>
-        protected virtual void Setup(IServiceBuilderContext context)
+        private void Initialize()
         {
-            context.Services.TryAddTransient<ICommandHandlerContextFactory, CommandHandlerContextFactory>();
-            context.Services.TryAddTransient<ICommandHandlerActivator, CommandHandlerActivator>();
+            var services = new ServiceCollection();
+            Configure(new Configuration(services));
 
-            //We will build a new service provider in which the user can register services. This service provider will be accessible in the CommandHandlerActivator.
-            var commandHandlerServiceProvider = GetUserServiceProvider();
-            context.Services.TryAddSingleton(commandHandlerServiceProvider);
+            var serviceProvider = services.BuildServiceProvider();
 
-            _serviceProvider = context.Services.BuildServiceProvider();
+            //resolve the assembly.
+            var assemblyResolver = serviceProvider.GetRequiredService<IAssemblyResolver>();
+            var assembly = assemblyResolver.Resolve();
 
-            //set dependencies
-            
+            //resolve all types in the assembly.
+            var typeResolver = serviceProvider.GetRequiredService<ITypeResolver>();
+            var types = typeResolver.ResolveTypes(assembly);
+
+            //resolve all methods in the types.
+            var methodResolver = serviceProvider.GetRequiredService<IMethodResolver>();
+            var methods = methodResolver.ResolveMethods(types);
+
+            //create CommandHandlerContexts from all methods.
+            var commandHandlerContextFactory = serviceProvider.GetRequiredService<ICommandHandlerContextFactory>();
+            var commandHandlerContexts = commandHandlerContextFactory.Create(methods);
+
+            //add all CommandHandlerContexts to the registry.
+            _commandHandlerRegistry = serviceProvider.GetRequiredService<ICommandHandlerRegistry>();
+            _commandHandlerRegistry.AddRange(commandHandlerContexts);
+        }
+
+        private void Configure(IConfiguration configuration)
+        {
+            Setup(configuration);
+
+            configuration.Services.TryAddTransient<ICommandHandlerRegistry, CommandHandlerRegistry>();
+            configuration.Services.TryAddTransient<ICommandHandlerContextFactory, CommandHandlerContextFactory>();
+            configuration.Services.TryAddTransient<ICommandHandlerActivator, CommandHandlerActivator>();
+            configuration.Services.TryAddTransient<ITypeResolver, TopicClientTypeResolver>();
+            configuration.Services.TryAddTransient<IMethodResolver, TopicSubscriptionMethodResolver>();
+            configuration.Services.TryAddTransient<IAssemblyResolver, AssemblyResolver>();
+            configuration.Services.TryAddTransient<IAttributeResolverFactory<Type, TopicClientAttribute>, TypeAttributeResolverFactory>();
+            configuration.Services.TryAddTransient<IAttributeResolverFactory<MethodInfo, TopicSubscriptionAttribute>, MethodInfoAttributeResolverFactory>();
         }
 
         /// <summary>
-        /// Build and retrieve the registered dependencies for the command handlers.
+        /// Set up the service builder and register dependencies.
         /// </summary>
-        /// <returns>The <see cref="IServiceProvider"/> instance containing user registered dependencies.</returns>
-        private IServiceProvider GetUserServiceProvider()
+        /// <param name="config">The <see cref="IConfiguration"/> instance.</param>
+        protected virtual void Setup(IConfiguration config)
         {
-            IServiceCollection services = new ServiceCollection();
-            RegisterDependencies(services);
-            return services.BuildServiceProvider();
         }
 
-        /// <summary>
-        /// <br>Register dependencies for the command handlers.</br>
-        /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to register dependencies in.</param>
-        protected virtual void RegisterDependencies(IServiceCollection services)
+        #region IDisposable Support
+        private bool _disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
         {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _commandHandlerRegistry?.Dispose();
+                }
+
+                _disposedValue = true;
+            }
         }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

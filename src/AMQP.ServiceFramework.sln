@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMQP.ServiceFramework", "AMQP.ServiceFramework\AMQP.ServiceFramework.csproj", "{BC802E0B-FB97-4DC5-9533-0953DD204B2D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMQP.Plugin", "AMQP.Plugin\src\AMQP.Plugin\AMQP.Plugin.csproj", "{3B00A39C-D9ED-4E0B-AD7D-A8794396AE28}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{E353666D-E348-43B9-8553-E3B49877EB53}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9AD3D8DF-C41F-4416-9D6B-FD9809512A96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMQP.ServiceFramework.Tests", "AMQP.ServiceFramework.Tests\AMQP.ServiceFramework.Tests.csproj", "{D9E7CB48-5EF6-43AD-8FAC-D82DAA44D23F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMQP.ServiceFramework.Tests", "AMQP.ServiceFramework.Tests\AMQP.ServiceFramework.Tests.csproj", "{D9E7CB48-5EF6-43AD-8FAC-D82DAA44D23F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{021981C5-6768-4FB8-8090-0A1F7D6BD4C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMQP.Plugin.Abstractions", "AMQP.Plugin.Abstractions\src\AMQP.Plugin.Abstractions\AMQP.Plugin.Abstractions.csproj", "{FD17A3A8-3174-44CB-8F88-EF06E37953A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,21 +23,21 @@ Global
 		{BC802E0B-FB97-4DC5-9533-0953DD204B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC802E0B-FB97-4DC5-9533-0953DD204B2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC802E0B-FB97-4DC5-9533-0953DD204B2D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B00A39C-D9ED-4E0B-AD7D-A8794396AE28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B00A39C-D9ED-4E0B-AD7D-A8794396AE28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B00A39C-D9ED-4E0B-AD7D-A8794396AE28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B00A39C-D9ED-4E0B-AD7D-A8794396AE28}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9E7CB48-5EF6-43AD-8FAC-D82DAA44D23F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9E7CB48-5EF6-43AD-8FAC-D82DAA44D23F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9E7CB48-5EF6-43AD-8FAC-D82DAA44D23F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9E7CB48-5EF6-43AD-8FAC-D82DAA44D23F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD17A3A8-3174-44CB-8F88-EF06E37953A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD17A3A8-3174-44CB-8F88-EF06E37953A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD17A3A8-3174-44CB-8F88-EF06E37953A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD17A3A8-3174-44CB-8F88-EF06E37953A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3B00A39C-D9ED-4E0B-AD7D-A8794396AE28} = {E353666D-E348-43B9-8553-E3B49877EB53}
 		{D9E7CB48-5EF6-43AD-8FAC-D82DAA44D23F} = {9AD3D8DF-C41F-4416-9D6B-FD9809512A96}
+		{FD17A3A8-3174-44CB-8F88-EF06E37953A4} = {021981C5-6768-4FB8-8090-0A1F7D6BD4C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A9EE42C-F8B0-45F8-8A7C-4365C69D81E0}

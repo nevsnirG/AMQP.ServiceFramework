@@ -2,11 +2,11 @@
 
 namespace AMQP.ServiceFramework
 {
-    internal sealed class ServiceBuilderContext : IServiceBuilderContext
+    internal sealed class Configuration : IConfiguration
     {
         public IServiceCollection Services { get; }
 
-        public ServiceBuilderContext(IServiceCollection services)
+        public Configuration(IServiceCollection services)
         {
             Services = services;
         }
