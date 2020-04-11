@@ -27,7 +27,7 @@ namespace AMQP.ServiceFramework
         #region IDisposable Support
         private bool _disposedValue = false; // To detect redundant calls
 
-        void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!_disposedValue)
             {

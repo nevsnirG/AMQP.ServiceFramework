@@ -1,5 +1,4 @@
 ﻿using AMQP.ServiceFramework.Attributes;
-using AMQP.ServiceFramework.Exceptions;
 using AMQP.ServiceFramework.Factories;
 using System;
 using System.Collections.Generic;

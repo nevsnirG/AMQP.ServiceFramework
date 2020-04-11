@@ -20,7 +20,7 @@ namespace AMQP.ServiceFramework.Factories
             var parameter = parameters[0];
             var declaringType = methodInfo.DeclaringType;
             var topicClientAttributes = declaringType.GetCustomAttributes(typeof(TopicSubscriptionAttribute), false);
-            if(topicClientAttributes.Length == 0)
+            if (topicClientAttributes.Length == 0)
                 throw new ArgumentException($"The specified method's declaring type is not attributed with the {nameof(TopicClientAttribute)}.", nameof(methodInfo));
 
             var topicClientAttribute = topicClientAttributes[0] as TopicClientAttribute;
