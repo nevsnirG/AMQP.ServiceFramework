@@ -5,7 +5,7 @@ namespace AMQP.ServiceFramework.Extensions
 {
     internal static class ICommandHandlerRegistryExtension
     {
-        public static void Add(this ICommandHandlerRegistry commandHandlerRegistry, IEnumerable<ICommandHandlerContext> commandHandlerContexts)
+        public static void AddRange(this ICommandHandlerRegistry commandHandlerRegistry, IEnumerable<ICommandHandlerContext> commandHandlerContexts)
         {
             if (commandHandlerRegistry is null)
                 throw new System.ArgumentNullException(nameof(commandHandlerRegistry));

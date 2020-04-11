@@ -17,6 +17,9 @@ namespace AMQP.ServiceFramework.Resolvers
 
         public IEnumerable<Type> ResolveTypes(Assembly assembly)
         {
+            if (assembly is null)
+                throw new ArgumentNullException(nameof(assembly));
+
             var resolver = _attributeResolverFactory.CreateAttributeResolver();
 
             foreach (var type in assembly.GetTypes())

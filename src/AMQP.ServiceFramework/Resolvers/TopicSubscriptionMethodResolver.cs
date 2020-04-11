@@ -1,7 +1,9 @@
 ﻿using AMQP.ServiceFramework.Attributes;
+using AMQP.ServiceFramework.Exceptions;
 using AMQP.ServiceFramework.Factories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace AMQP.ServiceFramework.Resolvers
@@ -19,11 +21,25 @@ namespace AMQP.ServiceFramework.Resolvers
         {
             var resolver = _attributeResolverFactory.CreateAttributeResolver();
 
-            foreach (var method in type.GetMethods(BindingFlags.Instance))
+            var interfaceType = typeof(ISubscription<>);
+            var interfaces = from i in type.GetInterfaces()
+                             where i.Name == interfaceType.Name
+                             select i;
+
+            foreach (var i in interfaces)
             {
-                var attribute = resolver.Invoke(method);
-                if (!(attribute is null))
-                    yield return method;
+                foreach (var iMethod in i.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    foreach (var cMethod in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                    {
+                        if (iMethod.ToString().Equals(cMethod.ToString(), StringComparison.CurrentCulture))
+                        {
+                            var attribute = resolver.Invoke(cMethod);
+                            if (!(attribute is null))
+                                yield return cMethod;
+                        }
+                    }
+                }
             }
         }
     }

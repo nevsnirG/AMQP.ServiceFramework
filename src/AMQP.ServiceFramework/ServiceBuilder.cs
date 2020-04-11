@@ -1,10 +1,12 @@
 ﻿using AMQP.ServiceFramework.Activation;
+using AMQP.ServiceFramework.Attributes;
 using AMQP.ServiceFramework.Extensions;
 using AMQP.ServiceFramework.Factories;
 using AMQP.ServiceFramework.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.Reflection;
 
 namespace AMQP.ServiceFramework
 {
@@ -44,19 +46,27 @@ namespace AMQP.ServiceFramework
             var services = new ServiceCollection();
             Configure(new Configuration(services));
 
-            //TODO - Improve using MediatR.
             var serviceProvider = services.BuildServiceProvider();
-            var assemblyResolver = serviceProvider.GetRequiredService<IAssemblyResolver>();
-            var typeResolver = serviceProvider.GetRequiredService<ITypeResolver>();
-            var methodResolver = serviceProvider.GetRequiredService<IMethodResolver>();
-            var commandHandlerContextFactory = serviceProvider.GetRequiredService<ICommandHandlerContextFactory>();
-            _commandHandlerRegistry = serviceProvider.GetRequiredService<ICommandHandlerRegistry>();
 
+            //resolve the assembly.
+            var assemblyResolver = serviceProvider.GetRequiredService<IAssemblyResolver>();
             var assembly = assemblyResolver.Resolve();
+
+            //resolve all types in the assembly.
+            var typeResolver = serviceProvider.GetRequiredService<ITypeResolver>();
             var types = typeResolver.ResolveTypes(assembly);
+
+            //resolve all methods in the types.
+            var methodResolver = serviceProvider.GetRequiredService<IMethodResolver>();
             var methods = methodResolver.ResolveMethods(types);
+
+            //create CommandHandlerContexts from all methods.
+            var commandHandlerContextFactory = serviceProvider.GetRequiredService<ICommandHandlerContextFactory>();
             var commandHandlerContexts = commandHandlerContextFactory.Create(methods);
-            _commandHandlerRegistry.Add(commandHandlerContexts);
+
+            //add all CommandHandlerContexts to the registry.
+            _commandHandlerRegistry = serviceProvider.GetRequiredService<ICommandHandlerRegistry>();
+            _commandHandlerRegistry.AddRange(commandHandlerContexts);
         }
 
         private void Configure(IConfiguration configuration)
@@ -69,6 +79,8 @@ namespace AMQP.ServiceFramework
             configuration.Services.TryAddTransient<ITypeResolver, TopicClientTypeResolver>();
             configuration.Services.TryAddTransient<IMethodResolver, TopicSubscriptionMethodResolver>();
             configuration.Services.TryAddTransient<IAssemblyResolver, AssemblyResolver>();
+            configuration.Services.TryAddTransient<IAttributeResolverFactory<Type, TopicClientAttribute>, TypeAttributeResolverFactory>();
+            configuration.Services.TryAddTransient<IAttributeResolverFactory<MethodInfo, TopicSubscriptionAttribute>, MethodInfoAttributeResolverFactory>();
         }
 
         /// <summary>

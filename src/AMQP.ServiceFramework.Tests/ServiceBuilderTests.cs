@@ -1,9 +1,11 @@
 using Moq;
 using Moq.Protected;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace AMQP.ServiceFramework.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class ServiceBuilderTests
     {
         private readonly Mock<ServiceBuilder> _serviceBuilderMock;
