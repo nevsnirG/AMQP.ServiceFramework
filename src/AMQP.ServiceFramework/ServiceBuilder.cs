@@ -20,6 +20,7 @@ namespace AMQP.ServiceFramework
         private readonly IConnection _connection;
 
         private ICommandHandlerRegistry _commandHandlerRegistry;
+        private ITopicSubscriptionRegistry _topicSubscriptionRegistry;
         private bool _initialized;
 
         protected ServiceBuilder(IConnection connection)
@@ -88,11 +89,11 @@ namespace AMQP.ServiceFramework
 
             //instantiate all topic subscriptions.
             var topicSubscriptionFactory = serviceProvider.GetRequiredService<ITopicSubscriptionFactory>();
-            var topicSubscriptionRegistry = serviceProvider.GetRequiredService<ITopicSubscriptionRegistry>();
+            _topicSubscriptionRegistry = serviceProvider.GetRequiredService<ITopicSubscriptionRegistry>();
             foreach (var keyPair in _commandHandlerRegistry)
             {
                 var topicSubscription = topicSubscriptionFactory.CreateSubscription(keyPair.Key, keyPair.Value);
-                topicSubscriptionRegistry.Add(topicSubscription);
+                _topicSubscriptionRegistry.Add(topicSubscription);
             }
             logger?.LogInformation("All subscriptions initialized successfully.");
         }
@@ -125,6 +126,7 @@ namespace AMQP.ServiceFramework
                 if (disposing)
                 {
                     _commandHandlerRegistry?.Dispose();
+                    _topicSubscriptionRegistry?.Dispose();
                 }
 
                 _disposedValue = true;
