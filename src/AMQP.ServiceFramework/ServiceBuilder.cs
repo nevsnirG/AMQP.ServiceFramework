@@ -1,10 +1,11 @@
 ﻿using AMQP.Plugin.Abstractions;
-using AMQP.ServiceFramework.Activation;
+using AMQP.ServiceFramework.Abstractions;
 using AMQP.ServiceFramework.Attributes;
-using AMQP.ServiceFramework.Extensions;
-using AMQP.ServiceFramework.Factories;
-using AMQP.ServiceFramework.Registries;
-using AMQP.ServiceFramework.Resolvers;
+using AMQP.ServiceFramework.Core.Activation;
+using AMQP.ServiceFramework.Core.Extensions;
+using AMQP.ServiceFramework.Core.Factories;
+using AMQP.ServiceFramework.Core.Registries;
+using AMQP.ServiceFramework.Core.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;

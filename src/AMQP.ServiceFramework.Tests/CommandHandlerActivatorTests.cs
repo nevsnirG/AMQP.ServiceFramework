@@ -1,8 +1,6 @@
-﻿using AMQP.ServiceFramework.Activation;
-using Moq;
+﻿using AMQP.ServiceFramework.Core.Activation;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace AMQP.ServiceFramework.Tests

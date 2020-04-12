@@ -1,5 +1,6 @@
-﻿using AMQP.ServiceFramework.Activation;
-using AMQP.ServiceFramework.Registries;
+﻿using AMQP.ServiceFramework.Abstractions;
+using AMQP.ServiceFramework.Core.Activation;
+using AMQP.ServiceFramework.Core.Registries;
 using Moq;
 using System;
 using System.Diagnostics.CodeAnalysis;
