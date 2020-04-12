@@ -1,12 +1,14 @@
 ﻿using AMQP.Plugin.Abstractions;
-using AMQP.ServiceFramework.Activation;
+using AMQP.ServiceFramework.Abstractions;
 using AMQP.ServiceFramework.Attributes;
-using AMQP.ServiceFramework.Extensions;
-using AMQP.ServiceFramework.Factories;
-using AMQP.ServiceFramework.Registries;
-using AMQP.ServiceFramework.Resolvers;
+using AMQP.ServiceFramework.Core.Activation;
+using AMQP.ServiceFramework.Core.Extensions;
+using AMQP.ServiceFramework.Core.Factories;
+using AMQP.ServiceFramework.Core.Registries;
+using AMQP.ServiceFramework.Core.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
 
@@ -18,6 +20,7 @@ namespace AMQP.ServiceFramework
         private readonly IConnection _connection;
 
         private ICommandHandlerRegistry _commandHandlerRegistry;
+        private ITopicSubscriptionRegistry _topicSubscriptionRegistry;
         private bool _initialized;
 
         protected ServiceBuilder(IConnection connection)
@@ -61,6 +64,8 @@ namespace AMQP.ServiceFramework
             Configure(new Configuration(services));
 
             var serviceProvider = services.BuildServiceProvider();
+            var logger = serviceProvider.GetService<ILogger<ServiceBuilder>>();
+            logger?.LogInformation("Discovering and initializing subscriptions...");
 
             //resolve the assembly.
             var assemblyResolver = serviceProvider.GetRequiredService<IAssemblyResolver>();
@@ -84,12 +89,13 @@ namespace AMQP.ServiceFramework
 
             //instantiate all topic subscriptions.
             var topicSubscriptionFactory = serviceProvider.GetRequiredService<ITopicSubscriptionFactory>();
-            var topicSubscriptionRegistry = serviceProvider.GetRequiredService<ITopicSubscriptionRegistry>();
+            _topicSubscriptionRegistry = serviceProvider.GetRequiredService<ITopicSubscriptionRegistry>();
             foreach (var keyPair in _commandHandlerRegistry)
             {
                 var topicSubscription = topicSubscriptionFactory.CreateSubscription(keyPair.Key, keyPair.Value);
-                topicSubscriptionRegistry.Add(topicSubscription);
+                _topicSubscriptionRegistry.Add(topicSubscription);
             }
+            logger?.LogInformation("All subscriptions initialized successfully.");
         }
 
         private void Configure(IConfiguration configuration)
@@ -120,6 +126,7 @@ namespace AMQP.ServiceFramework
                 if (disposing)
                 {
                     _commandHandlerRegistry?.Dispose();
+                    _topicSubscriptionRegistry?.Dispose();
                 }
 
                 _disposedValue = true;

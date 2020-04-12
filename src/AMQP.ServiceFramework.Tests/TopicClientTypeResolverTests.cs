@@ -1,4 +1,4 @@
-﻿using AMQP.ServiceFramework.Resolvers;
+﻿using AMQP.ServiceFramework.Core.Resolvers;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
