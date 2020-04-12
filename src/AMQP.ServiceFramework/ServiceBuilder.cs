@@ -8,7 +8,9 @@ using AMQP.ServiceFramework.Core.Registries;
 using AMQP.ServiceFramework.Core.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace AMQP.ServiceFramework
@@ -62,18 +64,23 @@ namespace AMQP.ServiceFramework
             Configure(new Configuration(services));
 
             var serviceProvider = services.BuildServiceProvider();
+            var logger = serviceProvider.GetService<ILogger<ServiceBuilder>>();
+            logger?.LogInformation("Initializing service...");
 
             //resolve the assembly.
             var assemblyResolver = serviceProvider.GetRequiredService<IAssemblyResolver>();
             var assembly = assemblyResolver.Resolve();
+            logger?.LogInformation($"Resolved assembly {assembly.FullName}.");
 
             //resolve all types in the assembly.
             var typeResolver = serviceProvider.GetRequiredService<ITypeResolver>();
             var types = typeResolver.ResolveTypes(assembly);
+            logger?.LogInformation($"Resolved {types.Count()} types.");
 
             //resolve all methods in the types.
             var methodResolver = serviceProvider.GetRequiredService<IMethodResolver>();
             var methods = methodResolver.ResolveMethods(types);
+            logger?.LogInformation($"Resolved {methods.Count()} event handlers.");
 
             //create CommandHandlerContexts from all methods.
             var commandHandlerContextFactory = serviceProvider.GetRequiredService<ICommandHandlerContextFactory>();
@@ -82,6 +89,7 @@ namespace AMQP.ServiceFramework
             //add all CommandHandlerContexts to the registry.
             _commandHandlerRegistry = serviceProvider.GetRequiredService<ICommandHandlerRegistry>();
             _commandHandlerRegistry.AddRange(commandHandlerContexts);
+            logger?.LogInformation("Built and registered handler contexts.");
 
             //instantiate all topic subscriptions.
             var topicSubscriptionFactory = serviceProvider.GetRequiredService<ITopicSubscriptionFactory>();
@@ -91,6 +99,8 @@ namespace AMQP.ServiceFramework
                 var topicSubscription = topicSubscriptionFactory.CreateSubscription(keyPair.Key, keyPair.Value);
                 topicSubscriptionRegistry.Add(topicSubscription);
             }
+            logger?.LogInformation("Activated all topic subscriptions.");
+            logger?.LogInformation("Service initialized successfully.");
         }
 
         private void Configure(IConfiguration configuration)

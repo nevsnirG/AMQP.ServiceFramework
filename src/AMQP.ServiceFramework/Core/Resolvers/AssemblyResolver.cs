@@ -7,7 +7,7 @@ namespace AMQP.ServiceFramework.Core.Resolvers
     {
         public Assembly Resolve()
         {
-            return Assembly.GetExecutingAssembly();
+            return Assembly.GetEntryAssembly();
         }
     }
 }
