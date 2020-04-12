@@ -10,6 +10,6 @@ namespace AMQP.ServiceFramework.Abstractions
         MethodInfo TargetMethod { get; }
         Type DeclaringType { get; }
         Type ParameterType { get; }
-        Type ParserType { get; internal set; }
+        Type ParserType { get; }
     }
 }

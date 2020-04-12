@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AMQP.ServiceFramework.Abstractions
+namespace AMQP.ServiceFramework
 {
     public abstract class MessageParser
     {
