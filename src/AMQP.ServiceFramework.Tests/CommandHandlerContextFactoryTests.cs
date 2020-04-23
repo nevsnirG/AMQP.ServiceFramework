@@ -58,6 +58,8 @@ namespace AMQP.ServiceFramework.Tests
             Expression<Func<MethodInfo, ParameterInfo[]>> getParametersMock = (method) => method.GetParameters();
             _methodInfoMock.Setup(getParametersMock)
                 .Returns(new ParameterInfo[count]);
+            _methodInfoMock.Setup((methodInfo) => methodInfo.ReturnType)
+                .Returns(typeof(void));
             var commandHandlerContextFactory = new CommandHandlerContextFactory();
 
             try
@@ -83,6 +85,8 @@ namespace AMQP.ServiceFramework.Tests
             Expression<Func<MethodInfo, ParameterInfo[]>> getParametersMock = (method) => method.GetParameters();
             _methodInfoMock.Setup(getParametersMock)
                 .Returns(new ParameterInfo[1]);
+            _methodInfoMock.Setup((methodInfo) => methodInfo.ReturnType)
+                .Returns(typeof(void));
             Expression<Func<Type, object[]>> getCustomAttributesMock = (type) => type.GetCustomAttributes(It.IsAny<Type>(), It.IsAny<bool>());
             _declaringTypeMock.Setup(getCustomAttributesMock)
                 .Returns(() =>
@@ -115,6 +119,8 @@ namespace AMQP.ServiceFramework.Tests
             Expression<Func<MethodInfo, ParameterInfo[]>> getParametersMock = (method) => method.GetParameters();
             _methodInfoMock.Setup(getParametersMock)
                 .Returns(new ParameterInfo[1]);
+            _methodInfoMock.Setup((methodInfo) => methodInfo.ReturnType)
+                .Returns(typeof(void));
             Expression<Func<Type, object[]>> getDeclaringTypeCustomAttributesMock = (type) => type.GetCustomAttributes(It.IsAny<Type>(), It.IsAny<bool>());
             _declaringTypeMock.Setup(getDeclaringTypeCustomAttributesMock)
                 .Returns(() =>
@@ -163,6 +169,8 @@ namespace AMQP.ServiceFramework.Tests
                         _parameterInfoMock.Object
                     };
                 });
+            _methodInfoMock.Setup((methodInfo) => methodInfo.ReturnType)
+                .Returns(typeof(void));
             Expression<Func<Type, object[]>> getDeclaringTypeCustomAttributesMock = (type) => type.GetCustomAttributes(It.IsAny<Type>(), It.IsAny<bool>());
             _declaringTypeMock.Setup(getDeclaringTypeCustomAttributesMock)
                 .Returns((Type type, bool b) =>
