@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RabbitMQ.Client" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AMQP.Plugin.Abstractions\src\AMQP.Plugin.Abstractions\AMQP.Plugin.Abstractions.csproj" />
+    <ProjectReference Include="..\AMQP.ServiceFramework\AMQP.ServiceFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AMQP.Plugin.RabbitMQ">
+      <HintPath>..\..\..\AMQP.Plugin\src\AMQP.Plugin.RabbitMQ\bin\Release\netstandard2.1\AMQP.Plugin.RabbitMQ.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

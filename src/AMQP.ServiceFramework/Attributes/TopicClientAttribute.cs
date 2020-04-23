@@ -9,9 +9,9 @@ namespace AMQP.ServiceFramework.Attributes
 
         public TopicClientAttribute() : base() { }
 
-        public TopicClientAttribute(string queue) : this()
-        {
-            Queue = queue;
-        }
+        //public TopicClientAttribute(string queue) : this()
+        //{
+        //    Queue = queue;
+        //}
     }
 }
