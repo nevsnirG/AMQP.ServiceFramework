@@ -18,7 +18,7 @@ public class Program : ServiceBuilder
     {
         var connectionString = "amqp://guest:guest@localhost:5672/";
         var connectionFactory = new RabbitMQConnectionFactory(connectionString);
-        using var connection = connectionFactory.CreateConnection(nameof(Instagram));
+        using var connection = connectionFactory.CreateConnection("exchange");
         using var application = new Program(connection);
         application.EnsureInitialization();
 
