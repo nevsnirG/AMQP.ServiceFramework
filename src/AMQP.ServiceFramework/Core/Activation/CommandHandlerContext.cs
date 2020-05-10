@@ -6,11 +6,11 @@ namespace AMQP.ServiceFramework.Core.Activation
 {
     internal sealed class CommandHandlerContext : ICommandHandlerContext
     {
-        public string Queue { get; internal set; }
-        public string Topic { get; internal set; }
-        public MethodInfo TargetMethod { get; internal set; }
-        public Type DeclaringType { get; internal set; }
-        public Type ParameterType { get; internal set; }
-        public Type ParserType { get; internal set; }
+        public string Queue { get; set; }
+        public string Topic { get; set; }
+        public MethodInfo TargetMethod { get; set; }
+        public Type DeclaringType { get; set; }
+        public Type ParameterType { get; set; }
+        public Type ParserType { get; set; }
     }
 }

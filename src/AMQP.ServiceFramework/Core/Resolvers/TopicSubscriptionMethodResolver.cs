@@ -18,6 +18,9 @@ namespace AMQP.ServiceFramework.Core.Resolvers
 
         public IEnumerable<MethodInfo> ResolveMethods(Type type)
         {
+            if (type is null)
+                throw new ArgumentNullException(nameof(type));
+
             var resolver = _attributeResolverFactory.CreateAttributeResolver();
 
             var interfaceType = typeof(ISubscription<>);

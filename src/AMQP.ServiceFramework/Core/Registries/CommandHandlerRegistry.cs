@@ -36,7 +36,7 @@ namespace AMQP.ServiceFramework.Core.Registries
         }
 
         #region IDisposable Support
-        private bool _disposedValue = false; // To detect redundant calls
+        private bool _disposedValue;
 
         private void Dispose(bool disposing)
         {

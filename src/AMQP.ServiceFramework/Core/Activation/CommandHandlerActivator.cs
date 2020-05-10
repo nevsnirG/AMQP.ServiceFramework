@@ -17,6 +17,8 @@ namespace AMQP.ServiceFramework.Core.Activation
         {
             if (commandHandlerContext is null)
                 throw new ArgumentNullException(nameof(commandHandlerContext));
+            if (commandHandlerContext.DeclaringType is null)
+                throw new ArgumentNullException(nameof(commandHandlerContext.DeclaringType));
 
             return ActivatorUtilities.CreateInstance(_serviceProvider, commandHandlerContext.DeclaringType);
         }

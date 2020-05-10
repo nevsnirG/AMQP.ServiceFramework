@@ -21,6 +21,11 @@ namespace AMQP.ServiceFramework.Core.Registries
 
         public void EnsureInitialization(IConnection connection, IMessageParserRegistry messageParserRegistry)
         {
+            if (connection is null)
+                throw new ArgumentNullException(nameof(connection));
+            if (messageParserRegistry is null)
+                throw new ArgumentNullException(nameof(messageParserRegistry));
+
             if (!_initialized)
             {
                 var messageParser = messageParserRegistry.Retrieve(_commandHandlerContext.ParserType);
@@ -40,7 +45,7 @@ namespace AMQP.ServiceFramework.Core.Registries
         }
 
         #region IDisposable Support
-        private bool _disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false;
 
         private void Dispose(bool disposing)
         {
