@@ -180,7 +180,7 @@ namespace AMQP.ServiceFramework.Tests
 
                     return new object[1]
                     {
-                        new TopicClientAttribute(queue)
+                        new TopicClientAttribute()
                     };
                 });
             Expression<Func<MethodInfo, object[]>> getMethodInfoCustomAttributesMock = (method) => method.GetCustomAttributes(It.IsAny<Type>(), It.IsAny<bool>());
@@ -192,7 +192,7 @@ namespace AMQP.ServiceFramework.Tests
 
                     return new object[1]
                     {
-                        new TopicSubscriptionAttribute(topic, typeof(MessageParser))
+                        new TopicSubscriptionAttribute(topic, queue, typeof(MessageParser))
                     };
                 });
             var commandHandlerContextFactory = new CommandHandlerContextFactory();
