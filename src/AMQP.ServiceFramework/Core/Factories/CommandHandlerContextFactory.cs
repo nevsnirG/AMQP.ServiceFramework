@@ -37,7 +37,7 @@ namespace AMQP.ServiceFramework.Core.Factories
             return new CommandHandlerContext()
             {
                 DeclaringType = declaringType,
-                Queue = topicClientAttribute.Queue ?? string.Empty,
+                Queue = topicSubscriptionAttribute.Queue ?? string.Empty,
                 TargetMethod = methodInfo,
                 Topic = topicSubscriptionAttribute.Topic,
                 ParameterType = parameter.ParameterType,
