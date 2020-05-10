@@ -32,8 +32,6 @@ namespace AMQP.ServiceFramework.Core.Factories
                 throw new ArgumentException($"The specified method is not attributed with the {nameof(TopicSubscriptionAttribute)}.", nameof(methodInfo));
 
             var topicSubscriptionAttribute = topicSubscriptionAttributes[0] as TopicSubscriptionAttribute;
-            //TODO - Check if topic is not null or empty and if parsertype is not null.
-
             return new CommandHandlerContext()
             {
                 DeclaringType = declaringType,

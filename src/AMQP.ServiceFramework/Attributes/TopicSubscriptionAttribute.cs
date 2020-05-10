@@ -11,16 +11,23 @@ namespace AMQP.ServiceFramework.Attributes
 
         public TopicSubscriptionAttribute(string topic, Type parserType) : base()
         {
-            if (string.IsNullOrWhiteSpace(topic))
+            topic = topic.Trim();
+            if (string.IsNullOrEmpty(topic))
                 throw new ArgumentException(nameof(topic));
 
             Topic = topic;
-            ParserType = parserType ?? throw new ArgumentNullException(nameof(parserType));
+
+            if (parserType is null)
+                throw new ArgumentNullException(nameof(parserType));
+            if (!typeof(MessageParser).IsAssignableFrom(parserType))
+                throw new ArgumentException($"The specified parser type is not a subclass of {typeof(MessageParser).Name}.", nameof(parserType));
+
+            ParserType = parserType;
         }
 
         public TopicSubscriptionAttribute(string topic, string queue, Type parserType) : this(topic, parserType)
         {
-            Queue = queue;
+            Queue = queue.Trim();
         }
     }
 }
